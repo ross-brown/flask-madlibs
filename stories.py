@@ -18,9 +18,10 @@ class Story:
         'I love to eat a good mango.'
     """
 
-    def __init__(self, words, text):
+    def __init__(self, code, title, words, text):
         """Create story with words and template text."""
-
+        self.code = code
+        self.title = title
         self.prompts = words
         self.template = text
 
@@ -37,16 +38,18 @@ class Story:
 
 # Here's a story to get you started
 
-silly_story = Story(
-    ["place", "noun", "verb", "adjective", "plural_noun"],
-    """Once upon a time, in a long-ago {place}, there lived an exceptionally
+silly_story = Story('history', 'History Story',
+                    ["place", "noun", "verb", "adjective", "plural_noun"],
+                    """Once upon a time, in a long-ago {place}, there lived an exceptionally
        {adjective} {noun}. It loved to {verb} with {plural_noun}."""
-)
+                    )
 
 # Here's another --- you should be able to swap in app.py to use this story,
 # and everything should still work
 
-excited_story = Story(
-    ["noun", "verb"],
-    """OMG!! OMG!! I love to {verb} a {noun}!"""
-)
+excited_story = Story('omg', 'Excited Story',
+                      ["noun", "verb"],
+                      """OMG!! OMG!! I love to {verb} a {noun}!"""
+                      )
+
+stories = {s.code: s for s in [silly_story, excited_story]}

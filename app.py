@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request
 from flask_debugtoolbar import DebugToolbarExtension
 
-from stories import silly_story
+from stories import stories
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "secret"
@@ -10,22 +10,26 @@ debug = DebugToolbarExtension(app)
 
 
 @app.get("/")
+def show_dropdown():
+    """Show dropdown of stories."""
+    return render_template("dropdown.html", stories=stories.values())
+
+
+@app.get("/questions")
 def show_form():
     """Show form to input madlib words"""
-    input_prompts = silly_story.prompts
+    story_code = request.args['story_code']
+    input_prompts = stories[story_code].prompts
 
-    return render_template("questions.html", prompts=input_prompts)
+    return render_template("questions.html",
+                           story_code=story_code,
+                           prompts=input_prompts)
 
-@app.get("/results")
-def show_results():
+@app.get("/<story_code>/results")
+def show_results(story_code):
     """Show results of madlib inputs"""
-    answers = {}
-    for prompt in silly_story.prompts:
-        answers[prompt] = request.args[prompt]
+    current_story = stories[story_code]
 
-    result = silly_story.get_result_text(answers)
+    result = current_story.get_result_text(request.args)
 
-    return render_template("results.html", story_result = result)
-
-
-
+    return render_template("results.html", story_result=result)
